@@ -7,6 +7,8 @@ register_interface:
     - include
     - ../axi/axi/include
     - ../common_cells/include
+    - ../iDMA/src/include
+    - ../../rtl/includes
   files:
     # Level 0
     - src/reg_intf.sv
