@@ -44,6 +44,7 @@ module apb_to_reg_v2 #(
       reg_req_o.addr = paddr_i;
       reg_req_o.write = pwrite_i;
       reg_req_o.wdata = pwdata_i;
+      reg_req_o.valid = psel_i & penable_i;
       reg_req_o.wstrb = '1;
       pready_o        = reg_rsp_i.ready;
       pslverr_o       = reg_rsp_i.error;
