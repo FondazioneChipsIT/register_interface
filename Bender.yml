@@ -7,7 +7,7 @@ dependencies:
   # apb: { git: "https://github.com/pulp-platform/apb.git", version: 0.2.2}
   common_cells:
     git: "git@github.com:DevOps-SmartEyewear-Research/common_cells.git"
-    rev: "766c7eda7f453cae084744c33661158800ef4179"
+    rev: "be924041efee788168c266fcbac33be4e5ac7bab"
   # common_verification: { git: "https://github.com/pulp-platform/common_verification.git", version: 0.2.3 }
 
 export_include_dirs:
