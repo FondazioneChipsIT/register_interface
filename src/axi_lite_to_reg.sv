@@ -17,15 +17,60 @@ module axi_lite_to_reg #(
   parameter int ADDR_WIDTH = -1,
   /// The width of the data.
   parameter int DATA_WIDTH = -1,
+  /// AXI Data width
+  parameter int AXI_DATA_WIDTH = -1,
+  /// AXI Address width
+  parameter int AXI_ADDR_WIDTH = -1,
   /// Buffer depth (how many outstanding transactions do we allow)
   parameter int BUFFER_DEPTH = 2,
   /// Whether the AXI-Lite W channel should be decoupled with a register. This
   /// can help break long paths at the expense of registers.
   parameter bit DECOUPLE_W = 1,
+  /// AXI-Lite aw channel struct type.
+  parameter type aw_chan_lite_t = struct packed {
+    logic [AXI_ADDR_WIDTH-1:0] addr;
+    logic [2:0] prot;
+  },
+  /// AXI-Lite w channel struct type.
+  parameter type w_chan_lite_t = struct packed {
+    logic [AXI_DATA_WIDTH-1:0] data;
+    logic [AXI_DATA_WIDTH/8-1:0] strb;
+  },
+  /// AXI-Lite ar channel struct type.
+  parameter type ar_chan_lite_t = struct packed {
+    logic [AXI_ADDR_WIDTH-1:0] addr;
+    logic [2:0] prot;
+  },
   /// AXI-Lite request struct type.
-  parameter type axi_lite_req_t = logic,
+  parameter type axi_lite_req_t = struct packed {
+    aw_chan_lite_t aw;
+    logic aw_valid;
+    w_chan_lite_t w;
+    logic w_valid;
+    logic b_ready;
+    ar_chan_lite_t ar;
+    logic ar_valid;
+    logic r_ready;
+  },
+  /// AXI-Lite b channel struct type.
+  parameter type b_chan_lite_t = struct packed {
+    logic [1:0] resp;
+  },
+  /// AXI-Lite r channel struct type.
+  parameter type r_chan_lite_t = struct packed {
+    logic [AXI_DATA_WIDTH-1:0] data;
+    logic [1:0] resp;
+  },
   /// AXI-Lite response struct type.
-  parameter type axi_lite_rsp_t = logic,
+  parameter type axi_lite_rsp_t = struct packed {
+    logic aw_ready;
+    logic w_ready;
+    b_chan_lite_t b;
+    logic b_valid;
+    logic ar_ready;
+    r_chan_lite_t r;
+    logic r_valid;
+  },
   /// Regbus request struct type.
   parameter type reg_req_t = logic,
   /// Regbus response struct type.

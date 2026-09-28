@@ -10,16 +10,91 @@
 module reg_to_axi #(
   /// Datawidth of both incoming Regbus and outgoing AXI4.
   parameter int unsigned DataWidth = 0,
+  /// The width of the address.
+  parameter int unsigned AxiAddrWidth = 32'd0,
+  /// The width of the data.
+  parameter int unsigned AxiDataWidth = 32'd0,
+  /// The width of the id.
+  parameter int unsigned AxiIdWidth   = 32'd0,
+  /// The width of the user signal.
+  parameter int unsigned AxiUserWidth = 32'd0,
   /// Cache signal assigned to Ax requests.
   parameter axi_pkg::cache_t AxiCache = axi_pkg::CACHE_MODIFIABLE,
   /// Incoming Regbus request type.
   parameter type reg_req_t = logic,
   /// Incoming Regbus response type.
   parameter type reg_rsp_t = logic,
-  /// Outgoing AXI4 request type.
-  parameter type axi_req_t = logic,
-  /// Incoming AXI4 response type.
-  parameter type axi_rsp_t = logic
+  /// AXI aw channel struct type.
+  parameter type axi_aw_chan_t = struct packed {
+    logic [AxiIdWidth-1:0] id;
+    logic [AxiAddrWidth-1:0] addr;
+    logic [7:0] len;
+    logic [2:0] size;
+    logic [1:0] burst;
+    logic lock;
+    logic [3:0] cache;
+    logic [2:0] prot;
+    logic [3:0] qos;
+    logic [3:0] region;
+    logic [5:0] atop;
+    logic [AxiUserWidth-1:0] user;
+  },
+  /// AXI w channel struct type.
+  parameter type axi_w_chan_t = struct packed {
+    logic [AxiDataWidth-1:0] data;
+    logic [AxiDataWidth/8-1:0] strb;
+    logic last;
+    logic [AxiUserWidth-1:0] user;
+  },
+  /// AXI ar channel struct type.
+  parameter type axi_ar_chan_t = struct packed {
+      logic [AxiIdWidth-1:0] id;
+      logic [AxiAddrWidth-1:0] addr;
+      logic [7:0] len;
+      logic [2:0] size;
+      logic [1:0] burst;
+      logic lock;
+      logic [3:0] cache;
+      logic [2:0] prot;
+      logic [3:0] qos;
+      logic [3:0] region;
+      logic [AxiUserWidth-1:0] user;
+  },
+  /// AXI request struct type.
+  parameter type axi_req_t = struct packed {
+      axi_aw_chan_t aw;
+      logic aw_valid;
+      axi_w_chan_t w;
+      logic w_valid;
+      logic b_ready;
+      axi_ar_chan_t ar;
+      logic ar_valid;
+      logic r_ready;
+  },
+  /// AXI b channel struct type.
+  parameter type axi_b_chan_t = struct packed {
+      logic [AxiIdWidth-1:0] id;
+      logic [1:0] resp;
+      logic [AxiUserWidth-1:0] user;
+  },
+  /// AXI r channel struct type.
+  parameter type axi_r_chan_t = struct packed {
+    logic [AxiIdWidth-1:0] id;
+    logic [AxiDataWidth-1:0] data;
+    logic [1:0] resp;
+    logic last;
+    logic [AxiUserWidth-1:0] user;
+  },
+  /// AXI response struct type.
+  parameter type axi_rsp_t = struct packed {
+    logic aw_ready;
+    logic ar_ready;
+    logic w_ready;
+    logic b_valid;
+    axi_b_chan_t b;
+    logic r_valid;
+    axi_r_chan_t r;
+  }
 ) (
   input  logic     clk_i,
   input  logic     rst_ni,
