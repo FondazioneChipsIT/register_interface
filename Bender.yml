@@ -3,10 +3,7 @@ package:
   authors: ["Fabian Schuiki <fschuiki@iis.ee.ethz.ch>", "Florian Zaruba <zarubaf@iis.ee.ethz.ch>"]
 
 dependencies:
-  axi: { git: "https://github.com/pulp-platform/axi.git", version: 0.39.1 }
-  apb: { git: "https://github.com/pulp-platform/apb.git", version: 0.2.2}
-  common_cells: { git: "https://github.com/pulp-platform/common_cells.git", version: 1.21.0 }
-  common_verification: { git: "https://github.com/pulp-platform/common_verification.git", version: 0.2.3 }
+  common_cells: { path: "../common_cells" }
 
 export_include_dirs:
   - include
@@ -18,8 +15,6 @@ sources:
   - vendor/lowrisc_opentitan/src/prim_subreg_ext.sv
   # Level 1
   - src/apb_to_reg_v2.sv
-  - src/axi_lite_to_reg.sv
-  - src/axi_to_reg_v2.sv
   - src/periph_to_reg.sv
   - src/reg_cdc.sv
   - src/reg_cut.sv
@@ -30,13 +25,11 @@ sources:
   - src/reg_to_apb.sv
   - src/reg_to_mem.sv
   - src/reg_to_tlul.sv
-  - src/reg_to_axi.sv
   - src/reg_uniform.sv
   - vendor/lowrisc_opentitan/src/prim_subreg_shadow.sv
   - vendor/lowrisc_opentitan/src/prim_subreg.sv
   # Level 2
   - src/deprecated/apb_to_reg.sv
-  - src/deprecated/axi_to_reg.sv
   - target: test
     files:
       - src/reg_test.sv
